@@ -16,7 +16,7 @@
       var { pdfjsLib } = globalThis;
     
       // The workerSrc property shall be specified.
-      pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.js/build/pdf.worker.mjs';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.mjs';
     
       // Asynchronous download of PDF
       var loadingTask = pdfjsLib.getDocument(url);
