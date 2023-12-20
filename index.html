@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <title>Matthew Kuzminski</title>
     <meta charset="utf-8" />
@@ -7,6 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+    <link rel="stylesheet" type="text/css" href="pdf_viewer.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
@@ -28,111 +29,23 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.mjs"
-      type="module"
-    ></script>
-    <script type="module">
-      // If absolute URL from the remote server is provided, configure the CORS
-      // header on that server.
-      var url = "./Matthew_Kuzminski.pdf";
-
-      // Loaded via <script> tag, create shortcut to access PDF.js exports.
-      var { pdfjsLib } = globalThis;
-
-      // The workerSrc property shall be specified.
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.mjs";
-
-      // Asynchronous download of PDF
-      var loadingTask = pdfjsLib.getDocument(url);
-      loadingTask.promise.then(
-        async function (pdf) {
-          console.log(url + " loaded");
-          var viewer = document.getElementById("resume-viewer");
-          for (var pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-            await Promise.resolve(pdf.getPage(pageNumber)).then(function (
-              page
-            ) {
-              var canvas = document.createElement("canvas");
-              canvas.setAttribute("id", "canvas-" + pageNumber);
-              var textLayer = document.createElement("div");
-              textLayer.setAttribute(
-                "id",
-                canvas.getAttribute("id") + "-text-layer"
-              );
-
-              var scale = 1.5;
-              var viewport = page.getViewport({ scale: scale });
-
-              // Prepare canvas using PDF page dimensions
-              var context = canvas.getContext("2d");
-              canvas.height = viewport.height;
-              canvas.width = viewport.width;
-
-              // Render PDF page into canvas context
-              var renderContext = {
-                canvasContext: context,
-                viewport: viewport,
-              };
-              page
-                .render(renderContext)
-                .then(function () {
-                  // Returns a promise, on resolving it will return text contents of the page
-                  return page.getTextContent();
-                })
-                .then(function (textContent) {
-                  // PDF canvas
-                  var pdf_canvas = $("#" + canvas.getAttribute("id"));
-
-                  // Canvas offset
-                  var canvas_offset = pdf_canvas.offset();
-
-                  // Canvas height
-                  var canvas_height = pdf_canvas.get(0).height;
-
-                  // Canvas width
-                  var canvas_width = pdf_canvas.get(0).width;
-
-                  // Assign CSS to the text-layer element
-                  $("#" + textLayer.getAttribute("id")).css({
-                    left: canvas_offset.left + "px",
-                    top: canvas_offset.top + "px",
-                    height: canvas_height + "px",
-                    width: canvas_width + "px",
-                  });
-
-                  // Pass the data to the method for rendering of text over the pdf canvas.
-                  PDFJS.renderTextLayer({
-                    textContent: textContent,
-                    container: $("#text-layer").get(0),
-                    viewport: viewport,
-                    textDivs: [],
-                  });
-                });
-              viewer.appendChild(canvas);
-              viewer.appendChild(textLayer);
-
-              console.log("Page " + pageNumber + " loaded");
-            });
-          }
-        },
-        function (reason) {
-          // PDF loading error
-          console.error(reason);
-        }
-      );
-
-      document.getElementById("download-resume").setAttribute("href", url);
-    </script>
     <style type="text/css">
-      #resume-viewer {
-        text-align: center;
+      body {
+        background: #eee;
+        font-family: Helvetica Neue, arial, sans-serif;
+        margin: 25px auto;
+        position: relative;
+      }
+
+      .pdfViewer .canvasWrapper {
+        box-shadow: 0 0 3px #bbb;
       }
     </style>
   </head>
   <body>
     <a class="btn btn-primary" role="button" id="download-resume">Download</a>
-    <div id="resume-viewer"></div>
+    <div id="viewer" class="pdfViewer"></div>
+    <script src="pdf.js"></script>
+    <script src="build/bundle.js"></script>
   </body>
 </html>
