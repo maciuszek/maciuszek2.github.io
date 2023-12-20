@@ -63,7 +63,6 @@
 	  loadPage(1).then(function (pdfPage) {
 	    var viewport = pdfPage.getViewport(DEFAULT_SCALE);
 	    PAGE_HEIGHT = viewport.height;
-	    document.body.style.width = viewport.width + 'px';
 	  });
 	});
 
