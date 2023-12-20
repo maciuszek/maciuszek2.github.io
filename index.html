@@ -55,7 +55,12 @@
               page
             ) {
               var canvas = document.createElement("canvas");
-              console.log("Page " + pageNumber + " loaded");
+              canvas.setAttribute("id", "canvas-" + pageNumber);
+              var textLayer = document.createElement("div");
+              textLayer.setAttribute(
+                "id",
+                canvas.getAttribute("id") + "-text-layer"
+              );
 
               var scale = 1.5;
               var viewport = page.getViewport({ scale: scale });
@@ -70,8 +75,45 @@
                 canvasContext: context,
                 viewport: viewport,
               };
-              page.render(renderContext);
+              page
+                .render(renderContext)
+                .then(function () {
+                  // Returns a promise, on resolving it will return text contents of the page
+                  return page.getTextContent();
+                })
+                .then(function (textContent) {
+                  // PDF canvas
+                  var pdf_canvas = $("#" + canvas.getAttribute("id"));
+
+                  // Canvas offset
+                  var canvas_offset = pdf_canvas.offset();
+
+                  // Canvas height
+                  var canvas_height = pdf_canvas.get(0).height;
+
+                  // Canvas width
+                  var canvas_width = pdf_canvas.get(0).width;
+
+                  // Assign CSS to the text-layer element
+                  $("#" + textLayer.getAttribute("id")).css({
+                    left: canvas_offset.left + "px",
+                    top: canvas_offset.top + "px",
+                    height: canvas_height + "px",
+                    width: canvas_width + "px",
+                  });
+
+                  // Pass the data to the method for rendering of text over the pdf canvas.
+                  PDFJS.renderTextLayer({
+                    textContent: textContent,
+                    container: $("#text-layer").get(0),
+                    viewport: viewport,
+                    textDivs: [],
+                  });
+                });
               viewer.appendChild(canvas);
+              viewer.appendChild(textLayer);
+
+              console.log("Page " + pageNumber + " loaded");
             });
           }
         },
