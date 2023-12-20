@@ -47,7 +47,6 @@
 	'use strict';
 
 	var pdfDocument = void 0;
-	var PAGE_HEIGHT = void 0;
 	var DEFAULT_SCALE = 1.33;
 
 	PDFJS.workerSrc = './pdf.worker.js';
@@ -58,15 +57,9 @@
 	  for (var i = 0; i < pdf.pdfInfo.numPages; i++) {
 	    var page = createEmptyPage(i + 1);
 	    viewer.appendChild(page);
+		loadPage(i);
 	  }
-
-	  loadPage(1).then(function (pdfPage) {
-	    var viewport = pdfPage.getViewport(DEFAULT_SCALE);
-	    PAGE_HEIGHT = viewport.height;
-	  });
 	});
-
-	window.addEventListener('scroll', handleWindowScroll);
 
 	function createEmptyPage(num) {
 	  var page = document.createElement('div');
@@ -127,16 +120,6 @@
 
 	    return pdfPage;
 	  });
-	}
-
-	function handleWindowScroll() {
-	  var visiblePageNum = Math.round(window.scrollY / PAGE_HEIGHT) + 1;
-	  var visiblePage = document.querySelector('.page[data-page-number="' + visiblePageNum + '"][data-loaded="false"]');
-	  if (visiblePage) {
-	    setTimeout(function () {
-	      loadPage(visiblePageNum);
-	    });
-	  }
 	}
 
 /***/ }
