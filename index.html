@@ -6,52 +6,61 @@
         text-align: center;
       }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.mjs" type="module"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.mjs"
+      type="module"
+    ></script>
     <script type="module">
       // If absolute URL from the remote server is provided, configure the CORS
       // header on that server.
-      var url = './Matthew_Kuzminski.pdf';
-    
+      var url = "./Matthew_Kuzminski.pdf";
+
       // Loaded via <script> tag, create shortcut to access PDF.js exports.
       var { pdfjsLib } = globalThis;
-    
+
       // The workerSrc property shall be specified.
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.mjs';
-    
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.269/pdf.worker.mjs";
+
       // Asynchronous download of PDF
       var loadingTask = pdfjsLib.getDocument(url);
-      loadingTask.promise.then(async function(pdf) {
-        console.log(url + ' loaded');
-        var viewer = document.getElementById('pdf-viewer');
-        for(var pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-          await Promise.resolve(pdf.getPage(pageNumber)).then(function(page) {
-            var canvas = document.createElement("canvas");
-            console.log('Page ' + pageNumber + ' loaded');
-      
-            var scale = 1.5;
-            var viewport = page.getViewport({scale: scale});
-      
-            // Prepare canvas using PDF page dimensions
-            var context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-      
-            // Render PDF page into canvas context
-            var renderContext = {
-              canvasContext: context,
-              viewport: viewport
-            };
-            page.render(renderContext);
-            viewer.appendChild(canvas);
-          });
+      loadingTask.promise.then(
+        async function (pdf) {
+          console.log(url + " loaded");
+          var viewer = document.getElementById("pdf-viewer");
+          for (var pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+            await Promise.resolve(pdf.getPage(pageNumber)).then(function (
+              page
+            ) {
+              var canvas = document.createElement("canvas");
+              console.log("Page " + pageNumber + " loaded");
+
+              var scale = 1.5;
+              var viewport = page.getViewport({ scale: scale });
+
+              // Prepare canvas using PDF page dimensions
+              var context = canvas.getContext("2d");
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+
+              // Render PDF page into canvas context
+              var renderContext = {
+                canvasContext: context,
+                viewport: viewport,
+              };
+              page.render(renderContext);
+              viewer.appendChild(canvas);
+            });
+          }
+        },
+        function (reason) {
+          // PDF loading error
+          console.error(reason);
         }
-      }, function (reason) {
-        // PDF loading error
-        console.error(reason);
-      });
+      );
     </script>
   </head>
   <body>
-    <div id='pdf-viewer'></div>
+    <div id="pdf-viewer"></div>
   </body>
 </html>
