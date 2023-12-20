@@ -47,7 +47,7 @@
 	'use strict';
 
 	var pdfDocument = void 0;
-	var DEFAULT_SCALE = 1.33;
+	var DEFAULT_SCALE = 1.5;
 
 	PDFJS.workerSrc = './pdf.worker.js';
 	PDFJS.getDocument('Matthew_Kuzminski.pdf').then(function (pdf) {
@@ -57,7 +57,7 @@
 	  for (var i = 0; i < pdf.pdfInfo.numPages; i++) {
 	    var page = createEmptyPage(i + 1);
 	    viewer.appendChild(page);
-		loadPage(i);
+		loadPage(i + 1);
 	  }
 	});
 
