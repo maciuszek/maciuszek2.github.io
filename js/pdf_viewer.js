@@ -49,7 +49,7 @@
 	var pdfDocument = void 0;
 	var DEFAULT_SCALE = 1.5;
 
-	PDFJS.workerSrc = './pdf.worker.js';
+	PDFJS.workerSrc = 'js/pdf.worker.js';
 	PDFJS.getDocument('Matthew_Kuzminski.pdf').then(function (pdf) {
 	  pdfDocument = pdf;
 
