@@ -12,6 +12,16 @@
         font-weight: var(--bs-body-font-weight);
       }
 
+      header {
+        width: 90%;
+        min-width: 522px;
+        margin-bottom: 1.5rem;
+        margin-right: auto;
+        margin-left: auto;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #dee2e6;
+      }
+
       #download_button {
         display: inline-block;
         padding: 0.375rem 0.75rem;
@@ -65,6 +75,7 @@
   </head>
   <body>
     <a id="download_button" href="Matthew_Kuzminski.pdf" title="Download PDF">Download</a>
+    <header></header>
     <div id="viewer" class="pdfViewer"></div>
     <script src="js/pdf.js"></script>
     <script src="js/pdf_viewer.js"></script>
